@@ -1,15 +1,24 @@
-module instChecker(/*autoarg*/);
+`default_nettype none
 
-   input [65:0] inst0_in,inst1_in,inst2_in,inst3_in;
-   output [3:0] pr_need_inst_out;
-   output [63:0] rcvr_pc_to_rob;
-   output [3:0]  str_en_to_rob;
-   output [3:0]  spec_brch_to_rob;
-   output [3:0]  brch_mode_to_rob;
-   output [3:0]  brch_pred_res_to_rob;
-   output [3:0]  no_exe_to_rob;
-   output [3:0]  inst_val_to_rob;
-   output [3:0]  jr_to_rob;
+module instChecker(/*autoarg*/
+   // Outputs
+   pr_need_inst_out, rcvr_pc_to_rob, str_en_to_rob, spec_brch_to_rob,
+   brch_mode_to_rob, brch_pred_res_to_rob, no_exe_to_rob,
+   inst_val_to_rob, jr_to_rob,
+   // Inputs
+   inst0_in, inst1_in, inst2_in, inst3_in
+   );
+
+   input wire [65:0] inst0_in,inst1_in,inst2_in,inst3_in;
+   output wire [3:0] pr_need_inst_out;
+   output wire [63:0] rcvr_pc_to_rob;
+   output wire [3:0]  str_en_to_rob;
+   output wire [3:0]  spec_brch_to_rob;
+   output wire [3:0]  brch_mode_to_rob;
+   output wire [3:0]  brch_pred_res_to_rob;
+   output wire [3:0]  no_exe_to_rob;
+   output wire [3:0]  inst_val_to_rob;
+   output wire [3:0]  jr_to_rob;
    
    wire 	 pr_need[3:0];
    wire 	 brch_spec[3:0];
