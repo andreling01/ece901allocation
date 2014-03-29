@@ -1,0 +1,4 @@
+to do list:
+1. ask Zhexuan about the ALU op code. Op code used to determine if an instruction need execution. This is for the instChecker
+
+2. move inst_val_to_lsq to reorder unit. Ask Tujing about why we need this signal since reorder unit will compact the instructions
