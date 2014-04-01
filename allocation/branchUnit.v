@@ -1,3 +1,4 @@
+`default_nettype none
 module branchUnit(/*autoarg*/
    // Outputs
    flush_pos, flush,
