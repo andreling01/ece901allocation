@@ -14,16 +14,16 @@ module branchUnit(/*autoarg*/
    input wire 		mis_pred;
    input wire [5:0] 	cmt_brch_indx;
    input wire 		cmt_brch;
-   output wire [5:0] 	flush_pos;
+   output wire [6:0] 	flush_pos;
    output reg 		flush; 		
    input wire 		clk,rst_n;
    
    wire 	     indx1,indx2,indx3;
    wire [5:0] 	     curr_pos1,curr_pos2,curr_pos3;
-   reg [12:0] 	     pos_reg0,pos_reg1; // {free|brch_indx|pointer_pos}
+   reg [13:0] 	     pos_reg0,pos_reg1; // {free|brch_indx|pointer_pos}
    wire 	     brch0,brch1,brch2,brch3;
    reg 		     pos_reg0_en,pos_reg1_en;
-   reg [12:0]	     pos_reg0_input,pos_reg1_input;
+   reg [13:0]	     pos_reg0_input,pos_reg1_input;
    reg 		     pos_reg0_clr,pos_reg1_clr;
    reg 		     flush_pos_sel;
    
@@ -153,7 +153,7 @@ module branchUnit(/*autoarg*/
 	if(!rst_n)
 	  pos_reg0 <= 13'b0;
 	else if (pos_reg0_clr)
-	  pos_reg0 <= {1'b1,12'b0};
+	  pos_reg0 <= {1'b1,13'b0};
 	else if (pos_reg0_en)
 	  pos_reg0 <= pos_reg0_input;
 	else
@@ -166,7 +166,7 @@ module branchUnit(/*autoarg*/
 	if(!rst_n)
 	  pos_reg1 <= 13'b0;
 	else if (pos_reg1_clr)
-	  pos_reg1 <= {1'b1,12'b0};
+	  pos_reg1 <= {1'b1,13'b0};
 	else if (pos_reg1_en)
 	  pos_reg1 <= pos_reg1_input;
 	else
