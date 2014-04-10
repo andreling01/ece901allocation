@@ -9,7 +9,7 @@ module instChecker(/*autoarg*/
    inst0_in, inst1_in, inst2_in, inst3_in
    );
 
-   input wire [65:0] inst0_in,inst1_in,inst2_in,inst3_in;
+   input wire [65:0] inst0_in,inst1_in,inst2_in,inst3_in65;
    output wire [3:0] pr_need_inst_out;
    output wire [63:0] rcvr_pc_to_rob;
    output wire [3:0]  str_en_to_rob;

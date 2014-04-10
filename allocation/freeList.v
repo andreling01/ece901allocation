@@ -24,6 +24,8 @@ module freeList(/*autoarg*/
    reg [5:0] 	     list[0:63];
    wire [5:0] 	     update[0:63];
    wire 	     list_commit_en[0:63];
+   wire 	     list_empty0, list_empty1,list_empty2,list_empty3;  //help to generate the list empty signal
+   wire [6:0] 	     alloc_ptr1,alloc_ptr2,alloc_ptr3;
    
    
    reg [6:0] 	     alloc_ptr, cmt_ptr;
@@ -115,7 +117,8 @@ module freeList(/*autoarg*/
 	  alloc_ptr <= alloc_ptr;
 	else if (flush)
 	  alloc_ptr <= flush_pos;
-	
+	else if (list_empty)
+	  alloc_ptr <= alloc_ptr;
 	else 
 	  alloc_ptr <= alloc_pos;
      end
@@ -127,23 +130,35 @@ module freeList(/*autoarg*/
 	  cmt_ptr <= 7'b0;
 	else if(stall)
 	  cmt_ptr <= cmt_ptr;
+	else if(list_empty)
+	  cmt_ptr <= cmt_ptr;
 	
 	else
-	  cmt_ptr <= cmt_ptr;
+	  cmt_ptr <= cmt_pos;
      end
 
    //output current position for other unit
    assign curr_pos = alloc_ptr;
 
    //output the list empty signal
-   assign list_empty = (alloc_ptr - cmt_ptr > 7'h60 || cmt_ptr - alloc_ptr < 7'h68) ? 1'b1 : 1'b0;
-
+   assign alloc_ptr1 = alloc_ptr + 1;
+   assign alloc_ptr2 = alloc_ptr + 2;
+   assign alloc_ptr3 = alloc_ptr + 3;
+   
+   assign list_empty0 = ((alloc_ptr[5:0] == cmt_ptr[5:0]) && alloc_ptr[6] != cmt_ptr[6]) ? 1:0;
+   assign list_empty1 = ((alloc_ptr1[5:0] == cmt_ptr[5:0]) && alloc_ptr1[6] != cmt_ptr[6]) ? 1:0;
+   assign list_empty2 = ((alloc_ptr2[5:0] == cmt_ptr[5:0]) && alloc_ptr2[6] != cmt_ptr[6]) ? 1:0;
+   assign list_empty3 = ((alloc_ptr3[5:0] == cmt_ptr[5:0]) && alloc_ptr3[6] != cmt_ptr[6]) ? 1:0;
+ 
+   assign list_empty = list_empty0 | list_empty1 | list_empty2 | list_empty3;
+   
+		      
    assign pr_num_out0 = pr_need_inst_in[0] ? list[alloc_ptr[5:0]] : 6'b0;
    assign pr_num_out1 = pr_need_inst_in[1] ? (pr_need_inst_in[0] ? list[next_pr1] : list[alloc_ptr[5:0]]) : 6'b0;
    assign pr_num_out2 = pr_need_inst_in[2] ? ((pr_need_inst_in[0] && pr_need_inst_in[1]) ? list[next_pr2] : (pr_need_inst_in[0] || pr_need_inst_in[1]) ? list[next_pr1] : list[alloc_ptr[5:0]]) : 6'b0;
    assign pr_num_out3 = pr_need_inst_in[3] ? ((pr_need_inst_in[0] && pr_need_inst_in[1] && pr_need_inst_in[2]) ? list[next_pr3]: 
-					      ((pr_need_inst_in[0] && pr_need_inst_in[1]) ||(pr_need_inst_in[0] && pr_need_inst_in[2])||(pr_need_inst_in[1] && pr_need_inst_in[2])? list[next_pr2]:
-					       (pr_need_inst_in[0] || pr_need_inst_in[1] || pr_need_inst_in[2]): list[next_pr1] : list[alloc_ptr[5:0]])) : 6'b0;
+					      ((pr_need_inst_in[0] && pr_need_inst_in[1]) || (pr_need_inst_in[0] && pr_need_inst_in[2])||(pr_need_inst_in[1] && pr_need_inst_in[2])? list[next_pr2]:
+					       (pr_need_inst_in[0] || pr_need_inst_in[1] || pr_need_inst_in[2]) ? list[next_pr1] : list[alloc_ptr[5:0]])) : 6'b0;
    
 
 endmodule // freeList
